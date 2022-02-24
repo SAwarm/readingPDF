@@ -12,7 +12,10 @@ class ReadingPDFController extends Controller
     public function readingPDF()
     {
         $dir = base_path('pdf');
+
         $allFiles = scandir($dir);
+
+        $file_name = "$dir/cronograma.pdf";
 
         $files = array_diff($allFiles, array('.', '..'));
     
@@ -22,17 +25,13 @@ class ReadingPDFController extends Controller
                 'Content-Disposition' => 'inline; filename="cronograma"'
             ]);
 
-            $var1 = base64_encode($var);
-
-            $return = $var;
+            $base64_pdf = base64_encode($var);
         }
 
-        $return = file_get_contents("$dir/cronograma.pdf");
-
         $parser = new \Smalot\PdfParser\Parser();
 
-        $parser = new \Smalot\PdfParser\Parser();
-        $pdf = $parser->parseFile("$dir/cronograma.pdf");
+        $pdf = $parser->parseFile("$file_name");
+
         $text = $pdf->getText();
 
         if (strrpos($text, "feiras")) {
